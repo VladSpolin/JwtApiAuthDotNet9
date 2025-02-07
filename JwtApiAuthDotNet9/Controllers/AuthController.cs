@@ -26,21 +26,32 @@ namespace JwtApiAuthDotNet9.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginUserDto request)
+        public async Task<ActionResult<TokenResponseDto>> Login(LoginUserDto request)
         {
-            var token = await _authService.LoginAsync(request);
-            if (token == null) return BadRequest("Incorrect login or password");
-            Response.Cookies.Append("lala", token);
-            return Ok(token);
+            var result = await _authService.LoginAsync(request);
+            if (result == null) return BadRequest("Incorrect login or password");
+            Response.Cookies.Append("lala", result.AccessToken);
+            return Ok(result);
         }
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet("test")]
+        [Authorize(Roles ="Admin")]
         public IActionResult OnlyAuthenticated() 
         { 
             return Ok("Authenticated"); 
         }
 
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
+        {
+            var result = await _authService.RefreshTokensAsync(request);
+            if (result is null || result.AccessToken is null || result.RefreshToken is null) 
+                return BadRequest("Invalid refresh token");
+
+            Response.Cookies.Append("lala", result.AccessToken);
+            return Ok(result);
+        }
     
 
     }

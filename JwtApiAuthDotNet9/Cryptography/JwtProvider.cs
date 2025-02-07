@@ -22,6 +22,7 @@ namespace JwtApiAuthDotNet9.Cryptography
             Claim[] claims = [
                 new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Role, user.Role),
             ];
             
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
@@ -37,6 +38,14 @@ namespace JwtApiAuthDotNet9.Cryptography
             var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 
             return tokenValue;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumder = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumder);
+            return Convert.ToBase64String(randomNumder);
         }
     }
 }
