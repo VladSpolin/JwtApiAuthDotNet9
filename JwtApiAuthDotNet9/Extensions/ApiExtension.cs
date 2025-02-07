@@ -27,6 +27,14 @@ namespace JwtApiAuthDotNet9.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
 
                     };
+                    options.Events = new JwtBearerEvents()
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            context.Token = context.Request.Cookies["lala"];
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             services.AddAuthorization();

@@ -1,15 +1,9 @@
-﻿using JwtApiAuthDotNet9.Cryptography.Interfaces;
-using JwtApiAuthDotNet9.Models;
+﻿using JwtApiAuthDotNet9.Models;
 using JwtApiAuthDotNet9.Models.Dtos;
 using JwtApiAuthDotNet9.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.Globalization;
-using System.Security.Claims;
-using System.Text;
 
 namespace JwtApiAuthDotNet9.Controllers
 {
@@ -36,7 +30,7 @@ namespace JwtApiAuthDotNet9.Controllers
         {
             var token = await _authService.LoginAsync(request);
             if (token == null) return BadRequest("Incorrect login or password");
-           
+            Response.Cookies.Append("lala", token);
             return Ok(token);
         }
 
