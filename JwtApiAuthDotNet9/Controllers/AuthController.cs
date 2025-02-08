@@ -21,7 +21,7 @@ namespace JwtApiAuthDotNet9.Controllers
         public async Task<ActionResult<User>> Register( RegisterUserDto request)
         {
             var user = await _authService.RegisterAsync(request);
-            if (user == null) return BadRequest("User is already exists");
+            if (user is null) return BadRequest("User is already exists");
         return Ok(user);
         }
 
@@ -29,7 +29,7 @@ namespace JwtApiAuthDotNet9.Controllers
         public async Task<ActionResult<TokenResponseDto>> Login(LoginUserDto request)
         {
             var result = await _authService.LoginAsync(request);
-            if (result == null) return BadRequest("Incorrect login or password");
+            if (result is null) return BadRequest("Incorrect login or password");
             Response.Cookies.Append("lala", result.AccessToken);
             return Ok(result);
         }
